@@ -15,13 +15,13 @@ server <- function(input, output, session) {
     length(unlist(strsplit(input$arrayNumbers, split = ",")))
   })
   
-  nMean <- eventReactive(input$ComputeButton, {
-    sum(as.numeric(unlist(strsplit(input$arrayNumbers, split = ",")))) / length(unlist(strsplit(input$arrayNumbers, split = ",")))
-    
+  nPopulationMean <- eventReactive(input$ComputeButton, {
+    #sum(as.numeric(unlist(strsplit(input$arrayNumbers, split = ",")))) / length(unlist(strsplit(input$arrayNumbers, split = ",")))
+    nArr <-c(as.numeric(unlist(strsplit(input$arrayNumbers, split = ","))))
+    mean(nArr)
+             
   })
-  
   nMedium <- eventReactive(input$ComputeButton, {
-    #browser()
     nArr <-c(sort.int(as.numeric(unlist(strsplit(input$arrayNumbers, split = ","))), decreasing = FALSE))
     nArrL <- length(nArr)
     nOE <- (nArrL %% 2)
@@ -31,12 +31,29 @@ server <- function(input, output, session) {
     nMed
   })
   
+  nPopulationVariance <- eventReactive(input$ComputeButton, {
+    nArr <-c(as.numeric(unlist(strsplit(input$arrayNumbers, split = ","))))
+    nArrL <- length(nArr)
+    sum((nArr - mean(nArr))^2)/nArrL
+  })
+  
+  nPopulationStandartDeviation <- eventReactive(input$ComputeButton, {
+    nArr <-c(as.numeric(unlist(strsplit(input$arrayNumbers, split = ","))))
+    nArrL <- length(nArr)
+    sqrt(sum((nArr - mean(nArr))^2)/nArrL)
+  })
+  
   
   # You can access the value of the widget with input$text, e.g.
   output$resultSum <- renderText({ nSum()})
   output$resultNum <- renderText({ nNum()})
-  output$resultMean <- renderText({ nMean()})
+  output$resultPopMean <- renderText({ nPopulationMean()})
   output$resultMedium <- renderText({ nMedium()})
   output$resultSort <- renderText({nSort()}) 
+  output$resultPopVar <- renderText({nPopulationVariance()}) 
+  output$resultPopStdDev <- renderText({nPopulationStandartDeviation()}) 
+  
+  #output$NumPlot <- renderPlot({input$as.numeric(unlist(strsplit(input$arrayNumbers, split = ",")))),
+  
   
 }
